@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Acompanhamento Estudos</title>
+    <style>
+      body {
+        font-family: "Arial", sans-serif;
+        text-align: center;
+        margin: 20px;
+        background-color: #121212;
+        color: #ffffff;
+      }
+      h1 {
+        color: #58cc02;
+        font-size: 2em;
+      }
+      button {
+        padding: 10px 15px;
+        background-color: #58cc02;
+        color: white;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 16px;
+      }
+      button:hover {
+        background-color: #45a200;
+      }
+      ul {
+        list-style-type: none;
+        padding: 0;
+      }
+      .task,
+      .section-title {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: #1e1e1e;
+        padding: 10px;
+        margin: 10px auto;
+        width: 60%;
+        border-radius: 10px;
+        box-shadow: 0px 4px 6px rgba(255, 255, 255, 0.1);
+      }
+      .task span {
+        text-align: left;
+        flex-grow: 1;
+      }
+      .task button {
+        background-color: #ff4b4b;
+        border-radius: 5px;
+      }
+      .task button:hover {
+        background-color: #d43d3d;
+      }
+      #progress-bar {
+        width: 60%;
+        background-color: #333;
+        border-radius: 10px;
+        margin: 20px auto;
+      }
+      #progress {
+        height: 20px;
+        width: 0%;
+        background-color: #58cc02;
+        border-radius: 10px;
+      }
+      .toggle-button {
+        background-color: #444;
+        border-radius: 5px;
+        margin-left: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>🚀 Jornada de Estudos 🎯</h1>
+
+    <h3>⭐ Pontuação: <span id="score">0</span></h3>
+    <h3>🏆 Nível: <span id="level">1</span></h3>
+    <div id="progress-bar">
+      <div id="progress"></div>
+    </div>
+
+    <div id="task-sections"></div>
+
+    <script>
+      let score = 0;
+      let level = 1;
+      const sections = {
+        "🖥️ Fundamentos de C# e Desenvolvimento Web": [
+          "✅ Completar C# Fundamentals (Microsoft Learn)",
+          "✅ Completar C# Tutorial (W3Schools)",
+          "🛠 Criar Calculadora em C#",
+          "🛠 Criar Gerenciador de tarefas em C#",
+          "🎨 Aprender HTML e CSS Avançado",
+          "📜 Estudar JavaScript básico (freeCodeCamp)",
+          "🏅 Certificação Recomendada: Microsoft Certified: Azure Fundamentals",
+        ],
+        "🛠 Back-End com ASP.NET Core e APIs": [
+          "📚 Completar ASP.NET Core Tutorial",
+          "🎥 Assistir Build a Web App with ASP.NET Core",
+          "⚙ Criar uma API RESTful para gerenciamento de tarefas",
+          "🔗 Estudar consumo de APIs com C#",
+          "🏅 Certificação Recomendada: Microsoft Certified: Azure Developer Associate",
+        ],
+        "🤖 Automação RPA com UiPath": [
+          "🎓 Completar cursos UiPath Academy",
+          "📊 Criar bot de Extração de Dados da Web para Excel",
+          "📧 Criar bot de Envio de E-mails Automatizado",
+          "🏅 Certificação Recomendada: UiPath Certified RPA Associate",
+        ],
+        "🗄️ Bancos de Dados e Oracle": [
+          "📖 Aprender SQL com foco em Oracle e SQL Server",
+          "🎯 Completar SQL Tutorial (W3Schools)",
+          "🔎 Estudar Oracle SQL (Oracle Dev Gym)",
+          "🏅 Certificação Recomendada: Oracle Database SQL Certified Associate",
+        ],
+        "☁️ AWS e Integração com Full-Stack": [
+          "🚀 Completar AWS Fundamentals (YouTube - freeCodeCamp)",
+          "📡 Hospedar uma aplicação ASP.NET Core na AWS",
+          "🏅 Certificação Recomendada: AWS Certified Cloud Practitioner",
+        ],
+        "🏅 Projetos Práticos e Consultoria": [
+          "📁 Desenvolver um portfólio com projetos integrados",
+          "📊 Criar sistema de automação com UiPath",
+          "🏅 Certificação Recomendada: Microsoft Certified: Solutions Architect Expert",
+        ],
+      };
+
+      function loadTasks() {
+        const taskSections = document.getElementById("task-sections");
+        Object.keys(sections).forEach((title) => {
+          const section = document.createElement("div");
+          section.innerHTML = `<div class="section-title">
+            <span>${title}</span>
+            <button class='toggle-button' onclick='toggleSection(this)'>▼</button>
+          </div><ul></ul>`;
+          const ul = section.querySelector("ul");
+          sections[title].forEach((taskText) => {
+            const li = document.createElement("li");
+            li.classList.add("task");
+            li.innerHTML = `<span>${taskText}</span> <button onclick="completeTask(this)">✔</button>`;
+            ul.appendChild(li);
+          });
+          taskSections.appendChild(section);
+        });
+      }
+
+      function toggleSection(button) {
+        const ul = button.parentElement.nextElementSibling;
+        ul.style.display = ul.style.display === "none" ? "block" : "none";
+        button.textContent = ul.style.display === "none" ? "▶" : "▼";
+      }
+
+      window.onload = loadTasks;
+    </script>
+  </body>
+</html>
