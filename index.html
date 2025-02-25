@@ -32,8 +32,7 @@
         list-style-type: none;
         padding: 0;
       }
-      .task,
-      .section-title {
+      .task, .section-title {
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -48,46 +47,40 @@
         text-align: left;
         flex-grow: 1;
       }
-      .task button {
-        background-color: #ff4b4b;
-        border-radius: 5px;
+      .task.completed {
+        opacity: 0.5;
       }
-      .task button:hover {
-        background-color: #d43d3d;
+      .task button:disabled {
+        background-color: #666;
+        cursor: not-allowed;
       }
       #progress-bar {
         width: 60%;
         background-color: #333;
         border-radius: 10px;
         margin: 20px auto;
+        overflow: hidden;
       }
       #progress {
         height: 20px;
         width: 0%;
         background-color: #58cc02;
         border-radius: 10px;
-      }
-      .toggle-button {
-        background-color: #444;
-        border-radius: 5px;
-        margin-left: auto;
+        transition: width 0.5s;
       }
     </style>
   </head>
   <body>
     <h1>🚀 Jornada de Estudos 🎯</h1>
-
     <h3>⭐ Pontuação: <span id="score">0</span></h3>
     <h3>🏆 Nível: <span id="level">1</span></h3>
-    <div id="progress-bar">
-      <div id="progress"></div>
-    </div>
-
+    <div id="progress-bar"><div id="progress"></div></div>
     <div id="task-sections"></div>
-
+    
     <script>
-      let score = 0;
-      let level = 1;
+      let score = localStorage.getItem("score") ? parseInt(localStorage.getItem("score")) : 0;
+      let level = localStorage.getItem("level") ? parseInt(localStorage.getItem("level")) : 1;
+      let completedTasks = localStorage.getItem("completedTasks") ? JSON.parse(localStorage.getItem("completedTasks")) : [];
       const sections = {
         "🖥️ Fundamentos de C# e Desenvolvimento Web": [
           "✅ Completar C# Fundamentals (Microsoft Learn)",
@@ -126,34 +119,42 @@
           "📁 Desenvolver um portfólio com projetos integrados",
           "📊 Criar sistema de automação com UiPath",
           "🏅 Certificação Recomendada: Microsoft Certified: Solutions Architect Expert",
-        ],
+        ]
       };
-
+      let totalTasks = Object.values(sections).reduce((acc, tasks) => acc + tasks.length, 0);
+      
       function loadTasks() {
+        document.getElementById("score").textContent = score;
+        document.getElementById("level").textContent = level;
+        updateProgress();
+        
         const taskSections = document.getElementById("task-sections");
         Object.keys(sections).forEach((title) => {
           const section = document.createElement("div");
           section.innerHTML = `<div class="section-title">
             <span>${title}</span>
-            <button class='toggle-button' onclick='toggleSection(this)'>▼</button>
           </div><ul></ul>`;
           const ul = section.querySelector("ul");
           sections[title].forEach((taskText) => {
             const li = document.createElement("li");
             li.classList.add("task");
-            li.innerHTML = `<span>${taskText}</span> <button onclick="completeTask(this)">✔</button>`;
+            if (completedTasks.includes(taskText)) {
+              li.classList.add("completed");
+            }
+            li.innerHTML = `<span>${taskText}</span> <button onclick="completeTask(this)" ${completedTasks.includes(taskText) ? "disabled" : ""}>✔</button>`;
             ul.appendChild(li);
           });
           taskSections.appendChild(section);
         });
       }
-
-      function toggleSection(button) {
-        const ul = button.parentElement.nextElementSibling;
-        ul.style.display = ul.style.display === "none" ? "block" : "none";
-        button.textContent = ul.style.display === "none" ? "▶" : "▼";
+      
+      function updateProgress() {
+        document.getElementById("score").textContent = score;
+        localStorage.setItem("score", score);
+        let progressPercent = (completedTasks.length / totalTasks) * 100;
+        document.getElementById("progress").style.width = progressPercent + "%";
       }
-
+      
       window.onload = loadTasks;
     </script>
   </body>
